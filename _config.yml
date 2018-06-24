@@ -1,2 +1,4 @@
 baseurl: /aragorn
 theme: jekyll-theme-hacker
+title: AragornSec
+show_downloads: true
