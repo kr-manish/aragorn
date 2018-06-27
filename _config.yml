@@ -1,4 +1,17 @@
+title: AragornSec
+author: Manish
+description: "This is my first blog"
+
+# social links
+twitter_username: sketchownlife
+github_username: kr-manish
+linkedin_username: manish-kumar-sec
+instagram_username: sketchownlife
+
 baseurl: /aragorn
 theme: jekyll-theme-hacker
-title: AragornSec
-show_downloads: true
+
+#show_downloads: true
+
+plugins:
+    - jekyll-seo-tag

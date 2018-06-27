@@ -20,9 +20,34 @@ body {
 /* General & 'Reset' Stuff */
 
 .container {
-  width: 90%;
+  width: 80%;
   max-width: 1000px;
   margin: 0 auto;
+}
+
+.site-title {
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 1.5;
+  letter-spacing: -1px;
+  margin-bottom: 0;
+  &,
+  &:visited {
+    color: $light-grey; 
+  }
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.site-nav {
+  float: right;
+  .page-link {
+    color: $conifer;
+    &:not(:last-child) {
+        margin-right: 20px;
+    }
+  }
 }
 
 section {
@@ -47,7 +72,8 @@ li {
 header {
   background: rgba(0, 0, 0, 0.1);
   width: 100%;
-  border-bottom: 1px dashed $conifer; //header;
+  border-top: 5px solid $grey-color-dark; 
+  border-bottom: 1px dashed $grey-color-light; //header;
   padding: 20px 0;
   margin: 0 0 40px 0;
 }
@@ -55,7 +81,7 @@ header {
 header h1 {
   font-size: 30px;
   line-height: 1.5;
-  margin: 0 0 0 -40px;
+  margin: 0 0 0 -30px;
   font-weight: bold;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
   color: $conifer;//$header;
@@ -73,6 +99,7 @@ header h1:before {
 
 header h2 {
   font-size: 18px;
+  margin: 0 0 0 10px;
   font-weight: 300;
   color: #666;
 }
@@ -89,6 +116,7 @@ header h2 {
 #main_content {
   width: 100%;
   -webkit-font-smoothing: antialiased;
+
 }
 section img {
   max-width: 100%
@@ -220,12 +248,12 @@ hr {
   width: 16px;
   height: 16px;
   margin: 1px 8px 0 0;
-  float: left;
 }
 
 .btn-github .icon {
   opacity: 0.6;
   background: url("../images/blacktocat.png") 0 0 no-repeat;
+  float: left;
 }
 
 /* Links
@@ -235,6 +263,14 @@ hr {
 a {
   color: #63c0f5;
   text-shadow: 0 0 5px rgba(104, 182, 255, 0.5);
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:hover, a:visited {
+  color: $light-grey;
 }
 
 /* Clearfix */

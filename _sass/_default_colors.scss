@@ -13,3 +13,8 @@ $potters-clay: #8f5536;
 $rajah: #f4bf75;
 $raw-sienna: #d28445;
 $silver-chalice: #aaa;
+$light-grey: #646470;
+
+$grey-color: #828282 !default;
+$grey-color-light: lighten($grey-color, 40%) !default;
+$grey-color-dark: darken($grey-color, 25%) !default;
