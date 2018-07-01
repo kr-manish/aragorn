@@ -1,8 +1,8 @@
-<header>
+<header class="site-header">
     <div class="container">
         {% assign default_paths = site.pages | map: "path"  %}
         {% assign page_paths = site.header_pages | default: default_paths  %}
-        <a class="site-title" rel="author" href="{{ "/" | relative_url }}"><h1 class="site-title">{{ site.title | escape }}</h1></a>
+        <a class="site-title" rel="author" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
         <h2>{{ site.description | default: site.github.project_tagline }}</h2>
 
         <!-- <a href="{{ site.github.repository_url }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a> -->

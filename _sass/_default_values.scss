@@ -1,3 +1,4 @@
+/* Default colors */
 $apple-blossom: #ac4142;
 $alto: #d0d0d0;
 $bouquet: #aa759f;
@@ -18,3 +19,15 @@ $light-grey: #646470;
 $grey-color: #828282 !default;
 $grey-color-light: lighten($grey-color, 40%) !default;
 $grey-color-dark: darken($grey-color, 25%) !default;
+
+/* other default values */
+$base-font-size: 16px !default;
+$small-font-size: $base-font-size * 0.875 !default;
+$base-line-height: 1.5 !default;
+$spacing-unit: 10px !default;
+$base-left-margin: 10px!default;
+$base-letter-spacing: -1px;
+
+@mixin relative-font-size($ratio) {
+  font-size: $base-font-size * $ratio;
+}
