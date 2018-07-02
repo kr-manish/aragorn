@@ -199,8 +199,9 @@ a:hover, a:visited {
 /* footer */
 .site-footer {
   border-top: 1px solid $grey-color-dark;
+  background: $grey-color-light;
   padding: $spacing-unit 0;
-  position: absolute;
+  position: relative;
   right: 0;
   bottom: 0;
   left: 0;
@@ -210,13 +211,14 @@ a:hover, a:visited {
 .footer-heading {
   @include relative-font-size(1.125);
   margin-bottom: -25px;
-  color: $silver-chalice;
+  color: $grey-color;
   text-align: center;
 }
 
 .wrapper {
   h5 { @include relative-font-size(0.8);
        color: $silver-chalice;
+       color: $grey-color;
        text-align: center;
    }
 }
