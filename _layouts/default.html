@@ -6,12 +6,12 @@
 
     {% include header.html %}
 
-    <div class="container">
-      <section id="main_content">
+    <main role="main" class="cf">
+      <article id="main_content">
         {{ content }}
-      </section>
-    </div>
-
+      </article>
+      <!-- {% include sidebar.html %} -->
+    </main>
     {% include footer.html %}
 
     {% if site.google_analytics %}

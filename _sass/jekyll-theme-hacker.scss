@@ -20,7 +20,7 @@ body {
 
 .container {
   width: 80%;
-  max-width: 1000px;
+  max-width: 1300px;
   margin: 0 auto;
 }
 
@@ -75,7 +75,7 @@ body {
 
 .site-nav {
   width: 80%;
-  max-width: 1000px;
+  max-width: 1300px;
   margin: 0 auto 10px auto;
   .page-link {
     color: $conifer;
@@ -140,12 +140,24 @@ li {
   line-height: 1;
 }
 
+.cf {
+  width: 80%;
+  margin: 0 auto;
+}
+.cf:before,
+.cf:after {
+    content:"";
+    display:table;
+}
+.cf:after {
+    clear:both;
+}
+
 /* Main Content
 */
 
 #main_content {
   flex: 1 0 auto;
-  width: 100%;
   -webkit-font-smoothing: antialiased;
   h1 { @include relative-font-size(2); }
   h2 { 
@@ -168,14 +180,44 @@ li {
   }
 }
 
+.pagination {
+  width: 100%;
+  @include relative-font-size(0.8);
+}
+
+.prevlink {
+  float: left;
+  width: 50%;
+}
+
+.nextlink {
+  float: right;
+  width: 50%;
+  text-align: right;
+}
 
 dt {
   font-style: italic;
   font-weight: bold;
 }
 
-ul li {
+.post-list li {
   list-style-image:url('../images/bullet.png');
+}
+
+a.more {
+  float: right;
+  color: yellow;
+  text-align: right;
+  @include relative-font-size(0.8);
+}
+
+a.more:before {
+  content: '[';
+}
+
+a.more:after {
+  content: '.. ]';
 }
 
 /* Links
@@ -221,4 +263,183 @@ a:hover, a:visited {
        color: $grey-color;
        text-align: center;
    }
+}
+
+/* sidebar */
+aside {
+  padding: 0 1em 0;
+}
+
+aside h3 {
+  @include relative-font-size(1);
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+aside p {
+  margin-left: 1em;
+}
+
+aside ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-left: 1em;
+}
+
+aside li {
+  margin-bottom: 0.5em;
+}
+
+.social {
+	display: flex;
+	justify-content: space-around;
+}
+.social a {
+	text-indent: -9000px;
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+}
+.github {
+	background: url(../images/github.svg) no-repeat;
+}
+.fb {
+	background: url(../images/facebook.svg) no-repeat;
+}
+.linked {
+	background: url(../images/linkedin.svg) no-repeat;
+}
+.twitter {
+	background: url(../images/twitter.svg) no-repeat;
+}
+
+/* --------------------------------------------------
+   Smaller screen styles
+-----------------------------------------------------*/
+@media only screen and (max-width: 950px) {
+
+.right, .left {
+	float: none;
+}
+/* --------------------------------------------------
+   top navigation styles
+-----------------------------------------------------*/
+nav {
+	background: none;
+	margin-bottom: 1em;
+}
+nav ul {
+	display: none;
+}
+nav li {
+	background: #42659A;
+    width: 30%;
+	margin-bottom: .2em;
+}
+nav li:hover {
+	background: #333;
+}
+nav li a {
+	@include relative-font-size(1);
+	font-weight: 100;
+	text-transform: uppercase;
+	margin: 0;
+	margin-bottom: 0.2em;
+	padding: .5em 0;
+	display: block;
+	text-align: center;
+	max-width: 100%;
+	width:100%;
+}
+nav li a:hover {
+	color: white;
+}
+/*toggle check styles*/
+.toggle-label {
+	display: block;
+	background: #42659A;
+	font: 0.8em 'Oswald', 'Helvetica Narrow', Arial, sans-serif;
+	text-align: center;
+	letter-spacing: 0.1em;
+	color: white;
+	padding: .5em 0;
+	text-decoration: none;
+	width: 5em;
+	cursor: pointer;
+	}
+#menu-toggle {
+	display: none;
+}
+#menu-toggle:checked + .toggle-label {
+	background: #4d4d4d;
+}
+#menu-toggle:checked + .toggle-label span {
+	display: none;
+}
+#menu-toggle:checked + .toggle-label:before {
+	content: 'close';
+}
+#menu-toggle:checked ~ ul {
+	display: block;
+}
+
+pre {
+	font-size: 1.2em;
+	width: 90%;
+}
+
+dd{
+	padding: 0;
+	margin:0;
+	margin-bottom: 1em;
+}
+}
+
+/* for larger size screen */
+
+@media only screen and (min-width: 951px) {
+nav {
+    background: none;
+    margin-bottom: 2em;
+}
+#menu-toggle, .toggle-label {
+        display: none;
+    }
+nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    min-height: 0;
+}
+nav li {
+    display: inline-block;
+}
+nav li a {
+    font: 1em 'Oswald', 'Helvetica Narrow', Arial, sans-serif;
+    color: white;
+    background: $grey-color-dark;
+    margin-right: 0.5em;
+    padding: .25em 1em;
+    display: inline-block;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+nav li a:hover {
+    color: white;
+    background: #333;
+}
+
+aside {
+  float: left;                                                       
+  background-color: black;
+  width: 30%;
+  max-width: 250px;
+  padding-top: 1em;
+  padding-left: 2.5%;
+}
+
+#main_content {
+  width: 100%;
+}
 }

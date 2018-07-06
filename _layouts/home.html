@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<div class="home">
+<article class="home">
     {% if page.title %}
       <h1 class="page-heading">{{ page.title }}</h1>
     {% endif %}
@@ -23,7 +23,7 @@ layout: default
               <span class="post-meta">{{ post.date | date: date_format }}</span>
               {% if site.show_excerpts  %}
               <p> {{ post.excerpt | strip_html }}<a href="{{ post.url | relative_url }}" title="read more" class="more">
-                  Read More</a></p>
+                  read more</a></p>
               {% endif %}
           </li>
           {% endfor %}
@@ -41,4 +41,4 @@ layout: default
           {% endif %}
       </div>
     {% endif %}
-</div>
+</article>
