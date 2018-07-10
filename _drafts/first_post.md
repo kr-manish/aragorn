@@ -85,7 +85,34 @@ here, L is used to denote the size and is divided by 4 to take steps of 4 bytes 
 
 The question now is, how did IAT get filled up at run time? We will try to find out this.  
 #### Export Directory
+Each loaded module will have it's own Export Directory. It is a structure called, IMAGE_EXPORT_DIRECTORY, having the following form:
+```cpp
+Private type IMAGE_EXPORT_DIRECTORY {
+    Characteristics as Long
+    TimeDateStamp as Long
+    MajorVersion as Integer
+    MinorVersion as Integer
+    lpName as Long
+    Base as Long
+    NumberOfFunctions as Long
+    NumberOfNames as Long
+    lpAddressOfFunctions as Long
+    lpAddressOfNames as Long
+    lpAddressOfNameOrdinals as Long
+}
+End Type
+```
+A summary of the Structure: This contains pointers to 3 arrays. The pointers are in the form of RVAs relative to the base address of the image.
+These arrays are:  
+**AddressOfFunctions**: It is an arrays of RVAs of the functions in the module.  
+**AddressOfNames**: Array of RVAs each corresponding to function name strings of exported functions.  
+**AddressOfNameOrdinals**: It gives an index or an offset into the AddressOfFunctions array to get the address of the function name.
 
+So the flow is something like this: The function name is fetched using the Export name table and the corresponding entry in the Export Ordinals Table is looked up to get the index or offset. This index is used to parse the Export Address Table and fetch the function address.
+
+**Export Name Table > Export Ordinals Table > Export Address Table -> Function Address (VA)** 
+
+This should now make it clear how the OS loader gets to know the addresses of functions which are imported by the main module.
 #### References
 [Windbg commands](http://windbg.info/doc/1-common-cmds.html)
 
