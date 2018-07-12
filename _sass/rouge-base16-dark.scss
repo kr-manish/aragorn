@@ -7,6 +7,7 @@
 
 .highlight {
 
+  @include relative-font-size(0.8);
   $plaintext: $alto !default;
   $string: $chelsea-cucumber !default;
   $literal: $chelsea-cucumber !default;

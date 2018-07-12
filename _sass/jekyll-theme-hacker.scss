@@ -1,4 +1,5 @@
 @import "default_values";
+@import "rouge-base16-dark";
 
 $body-background: $cod-grey !default;
 $body-foreground: $gallery !default;
@@ -159,21 +160,27 @@ li {
 #main_content {
   flex: 1 0 auto;
   -webkit-font-smoothing: antialiased;
-  h1 { @include relative-font-size(2); }
+  h1 { @include relative-font-size(2); 
+       margin-bottom: 0;
+  }
   h2 { 
-      @include relative-font-size(2);
+      @include relative-font-size(1.875);
       color: $silver-chalice;
       text-align: center; 
   }
-  /* h3 { font-size: 18px; } */
-  h4 { font-size: 14px; }
+  h3 { @include relative-font-size(1.75); 
+       margin-bottom: 0;
+  }
+  h4 { @include relative-font-size(1.5); 
+       margin-bottom: 0;
+  }
   h5 {
-    font-size: 12px;
     text-transform: uppercase;
+    @include relative-font-size(1.25);
     margin: 0 0 5px 0;
   }
   h6 {
-    font-size: 12px;
+    @include relative-font-size(1);
     text-transform: uppercase;
     color: #999;
     margin: 0 0 5px 0;
