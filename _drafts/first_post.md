@@ -1,23 +1,32 @@
 ---
 layout: post
-title: Reverse Engineering - Part 1
+title: Reverse Engineering Portable Executable 
 ---
+The main aim of this blog is to correlate the Operating System Internals and the approach of Reverse Engineering a malware at code level. Here I will be showing what are the basic things that happen when an portable executable is started.  
+You can use any executable to deep dive into OS internals. Here I have used microsoft's notepad.exe and to debug <!--more-->this I have used microsoft's debugger called **windbg**, which can be downloaded from [here][WindbgDownloadLink].
+#### Portable Executable
 
-Let's start by looking at the loaded modules of notepad++ in windbg. List of all loaded modules can be displayed using `lm` command.<!--more-->
+Portable Executable (PE) format is a file format for executables, DLLs and others used in windows operating system. The PE format is a data structure that encapsulates the information necessary for the windows OS loader to manage the wrapped executable code. This includes dynamic library references for linking, API export and import tables etc.  
+Here we are going to understand PE structure, the concepts and various data directories inside it. Let's get started.  
+At first, open windbg and set up the symbols to point to Microsoft's Symbols Server. This is done to make our debugging easier. To understand more about symbols, you can read this [microsoft's documentation][symbol]. 
+Now open up the executable (notepad.exe in this case) in windbg. Once opened, it shows all the loaded modules of notepad. We can also get the list of all loaded modules using `lm` command. Take a look at the following output:
 
-![alt text][modules]
+![loaded modules][modules]
 
-### PE Header
-Every portable executable begins with a DOS header having a structure of type IMAGE_DOS_HEADER. We can see this structure with the help of following command.
+We can see all the DLLs loaded with a range of addresses. This shows that each module occupies a specific range of address. For instance, notepad.exe  uses some windows API functions exported by kernel32.dll, hence it is loaded along with notepad and the address range where it is loaded is 76e10000 76ee4000. From this we get the base address of kernel32.dll which is 76e10000. These base addresses of modules are very important as we will get to know that usually the value at hand is an RVA (Relative Value Address). This RVA has to be added in base address to get the original address.  
+Every PE begins with a DOS header having structure of type **IMAGE_DOS_HEADER**. We can view this in windbg using image base address of PE image, 00520000:
+**``` !dt _IMAGE_DOS_HEADER <base address of PE> ```** 
 
-**``` !dt _IMAGE_DOS_HEADER <base address of PE> ```**
+![Dos Header][dosHeader]
 
 This gives us two important information:
-   * e_magic - This has the __MZ__ signature hex valus 0x5a4d. Every portable executable will begin with this sequence.
+   * e_magic - This has the __MZ__ signature hex value 0x5a4d. Every portable executable will begin with this sequence.
    * e_lfanew - Offset of PE file header. This value is in decimal and hence must be converted into hexadecimal before locating PE file header.
 
+In this case, e_lfanew value is 224 which in hexadecimal is E0. Therefore, file header is present at an offset of E0 from the base address of the PE.
+
 #### Data Directories
-The syntax to see **Image Header** is: _```!dh <image base address> <option>```_. This gives many information including data directory arrays.
+Now let us see the PE header of our main executable. The syntax to see **PE Header** is: _```!dh <image base address> <option>```_. This gives many information including data directory arrays.
 
 #### Import Directory
 Import table contains an array of data structure of type *_IMAGE_IMPORT_DESCRIPTOR*. This structure has following form: 
@@ -112,8 +121,15 @@ So the flow is something like this: The function name is fetched using the Expor
 
 **Export Name Table > Export Ordinals Table > Export Address Table -> Function Address (VA)** 
 
-This should now make it clear how the OS loader gets to know the addresses of functions which are imported by the main module.
-#### References
-[Windbg commands](http://windbg.info/doc/1-common-cmds.html)
+This should now make it clear how the OS loader gets to know the addresses of functions which are imported by the main module.  
+#### Process Environment Block
+Process Environment Block is an important data structure from an exploiter's perspective. A shellcode executes a set of function APIs and for this it must locate and load them.  
 
-[modules]: {{ site.baseurl }}/assets/images/modulesLoaded.JPG "modules loaded"
+#### References
+  * [Portable Executable File Format](https://msdn.microsoft.com/en-IN/library/ms809762.aspx)  
+  * [Windbg commands](http://windbg.info/doc/1-common-cmds.html)
+
+[WindbgDownloadLink]: https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/
+[symbol]: https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/symbols-and-symbol-files
+[modules]: {{ site.baseurl }}/assets/images/firstPost/modulesLoaded.JPG "modules loaded"
+[dosHeader]: {{ site.baseurl }}/assets/images/firstPost/DosHeader.JPG "Dos Header"
