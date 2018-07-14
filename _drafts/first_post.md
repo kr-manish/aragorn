@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Reverse Engineering Portable Executable 
+tags: [reversing, security, windows internals]
 ---
 The main aim of this blog is to correlate the Operating System Internals and the approach of Reverse Engineering a malware at code level. Here I will be showing what are the basic things that happen when an portable executable is started.  
 You can use any executable to deep dive into OS internals. Here I have used microsoft's notepad.exe and to debug <!--more-->this I have used microsoft's debugger called **windbg**, which can be downloaded from [here][WindbgDownloadLink].
