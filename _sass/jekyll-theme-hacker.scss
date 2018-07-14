@@ -30,7 +30,7 @@ body {
   border-top: 5px solid $grey-color-dark; 
   border-bottom: 1px dashed $grey-color-dark; //header;
   padding: 10px 0;
-  margin: 0 0 40px 0;
+  margin: 0 0 20px 0;
 }
 
 .site-header h1 {
@@ -139,6 +139,7 @@ section {
 
 li {
   line-height: 1;
+  margin-bottom: 10px;
 }
 
 .cf {
@@ -225,6 +226,44 @@ a.more:before {
 
 a.more:after {
   content: '.. ]';
+}
+
+/* Archive */
+#archive {
+  h2 {
+    text-align: left;
+  }
+  h3 {
+    @include relative-font-size(1.2);
+  }
+}
+.taglist li {
+  @include relative-font-size(1);
+}
+.tag-cloud {
+  max-width: 800px;
+  margin-bottom: 40px;
+}
+
+.tag-cloud li {
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 25px;
+}
+
+.tag-cloud a {
+  text-decoration: none;
+  @include relative-font-size(1);
+  background: $dove-grey;
+  color: white;
+  padding: 5px 5px;
+  border-radius: 5px;
+}
+.tag-cloud a:hover {
+    color: $rajah;
+}
+.tag-cloud a:visited {
+  color: $rajah;
 }
 
 /* Links
