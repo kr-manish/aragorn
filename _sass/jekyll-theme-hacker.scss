@@ -20,7 +20,7 @@ body {
 /* General & 'Reset' Stuff */
 
 .container {
-  width: 80%;
+  width: 70%;
   max-width: 1300px;
   margin: 0 auto;
 }
@@ -75,7 +75,7 @@ body {
 }
 
 .site-nav {
-  width: 80%;
+  width: 70%;
   max-width: 1300px;
   margin: 0 auto 10px auto;
   .page-link {
@@ -143,7 +143,7 @@ li {
 }
 
 .cf {
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
 }
 .cf:before,
@@ -347,17 +347,36 @@ aside li {
 	width: 32px;
 	height: 32px;
 }
-.github {
-	background: url(../images/github.svg) no-repeat;
+
+/* contact page */
+#contact {
+  h2 { text-align: left; }
 }
-.fb {
-	background: url(../images/facebook.svg) no-repeat;
+
+.follow {
+  list-style-type: none;
+}
+
+li.github {
+    background: url(../images/github.svg) no-repeat left top;
+    height: 32px;
+    padding-left: 44px;
+    padding-top: 8px;
+}
+li.fb {
+	background: url(../images/facebook.svg) no-repeat left top;
+    height: 32px;
+    padding: 8px 0 0 44px;
 }
 .linked {
 	background: url(../images/linkedin.svg) no-repeat;
+    height: 32px;
+    padding: 8px 0 0 44px;
 }
 .twitter {
 	background: url(../images/twitter.svg) no-repeat;
+    height: 40px;
+    padding: 8px 0 0 44px;
 }
 
 /* --------------------------------------------------

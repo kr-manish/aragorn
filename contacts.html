@@ -1,6 +1,17 @@
 ---
 layout: default
 title: contacts
-permalink: /contacts/
 ---
-Hello
+<article role="article" id="contact">
+    <header>
+        <h2>{{page.title}}</h2>
+        <ul class="follow">
+            <li class="github"><a href="http://www.github.com/{{ site.github_username }}" title="Github">Github</a></li>
+            <li class="fb"><a href="http://www.facebook.com/{{ site.facebook_username }}" title="facebook">Facebook</a></li>
+            <li class="linked"><a href="http://www.linkedin.com/in/{{ site.linkedin_username }}" title="linked in">LinkedIn</a></li>
+            <li class="twitter"><a href="http://www.instagram.com/{{ site.instagram_username }}" title="instagram">Instagram</a></li>
+            <li class="twitter"><a href="http://www.twitter.com/{{ site.twitter_username }}" title="twitter">Twitter</a></li>
+        </ul>
+    </header>
+</article>
+
