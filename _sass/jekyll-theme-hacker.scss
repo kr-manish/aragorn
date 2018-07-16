@@ -182,7 +182,6 @@ li {
   }
   h6 {
     @include relative-font-size(1);
-    text-transform: uppercase;
     color: #999;
     margin: 0 0 5px 0;
   }
@@ -348,8 +347,8 @@ aside li {
 	height: 32px;
 }
 
-/* contact page */
-#contact {
+/* pages */
+#page {
   h2 { text-align: left; }
 }
 
@@ -368,14 +367,19 @@ li.fb {
     height: 32px;
     padding: 8px 0 0 44px;
 }
-.linked {
+li.linked {
 	background: url(../images/linkedin.svg) no-repeat;
     height: 32px;
     padding: 8px 0 0 44px;
 }
-.twitter {
+li.insta {
+    background: url(../images/insta.svg) no-repeat;
+    height: 32px;
+    padding: 8px 0 0 44px;
+}
+li.twitter {
 	background: url(../images/twitter.svg) no-repeat;
-    height: 40px;
+    height: 32px;
     padding: 8px 0 0 44px;
 }
 
