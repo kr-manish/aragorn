@@ -156,6 +156,14 @@ li {
 .cf {
   width: 70%;
   margin: 0 auto;
+  img {
+    height: 100%;
+    max-width: 100%;
+    vertical-align: middle;
+  }
+  li {
+    margin-bottom: 5px 0;
+  }
 }
 .cf:before,
 .cf:after {

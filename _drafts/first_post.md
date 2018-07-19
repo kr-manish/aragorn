@@ -15,8 +15,8 @@ Now open up the executable (notepad.exe in this case) in windbg. Once opened, it
 ![loaded modules][modules]
 
 We can see all the DLLs loaded with a range of addresses. This shows that each module occupies a specific range of address. For instance, notepad.exe  uses some windows API functions exported by kernel32.dll, hence it is loaded along with notepad and the address range where it is loaded is 76e10000 76ee4000. From this we get the base address of kernel32.dll which is 76e10000. These base addresses of modules are very important as we will get to know that usually the value at hand is an RVA (Relative Value Address). This RVA has to be added in base address to get the original address.  
-Every PE begins with a DOS header having structure of type **IMAGE_DOS_HEADER**. We can view this in windbg using image base address of PE image, 00520000:
-**``` !dt _IMAGE_DOS_HEADER <base address of PE> ```** 
+Every PE begins with a DOS header having structure of type **IMAGE_DOS_HEADER**. We can view this in windbg using image base address of PE image, 01000000:  
+**``` dt _IMAGE_DOS_HEADER <base address of PE> ```** 
 
 ![Dos Header][dosHeader]
 
@@ -27,9 +27,15 @@ This gives us two important information:
 In this case, e_lfanew value is 224 which in hexadecimal is E0. Therefore, file header is present at an offset of E0 from the base address of the PE.
 
 #### Data Directories
-Now let us see the PE header of our main executable. The syntax to see **PE Header** is: _```!dh <image base address> <option>```_. This gives many information including data directory arrays.
+Now let us see the PE header of our main executable. The syntax to see **PE Header** is:  
+__`!dh <image base address> <option>`__.   
 
-#### Import Directory
+![PE Header][peHeader]
+
+This gives many information including data directory arrays. It's an array of structures of **IMAGE_DATA_DIRECTORY** type each having two fields:  
+Virtual Address and size.
+
+##### Import Directory
 Import table contains an array of data structure of type *_IMAGE_IMPORT_DESCRIPTOR*. This structure has following form: 
 ```cpp
 typedef struct _IMAGE_IMPORT_DESCRIPTOR{
@@ -49,17 +55,22 @@ Two important fields at this point are, OriginalFirstThunk and FirstThunk. Each 
 **FirstThunk** -> Import Address Table (IAT)
 
 Let us start by viewing the memory at the Import Table Virtual Address:  
-IMAGE -> dd base_address+RVA of import table
+
+![Import Directory][importDir]
 
 We can now relate this to the _IMAGE_IMPORT_DESCRIPTOR structure.  
-OriginalFirstThunk = ?  
-ForwardChain = ?  
-TimeDateStamp = ?  
-Name = ?  
-FirstThunk = ?  
+OriginalFirstThunk = 0000a234  
+ForwardChain = ffffffff  
+TimeDateStamp = ffffffff  
+Name = 0000a224  
+FirstThunk = 00001000  
 
-Let us now view the address pointed out by OriginalFirstThunk:
-IMAGE -> dd addr  
+Let us now view the address pointed out by OriginalFirstThunk:  
+
+![Original First Thunk][oft]
+
+![Original First Thunk Value][oft_val]
+
 We get a list of RVAs which are also called _IMAGE_THUNK_DATA which in turn points to the structure of type _IMAGE_IMPORT_BY_NAME structure:  
 ```cpp
 typedef struct _IMAGE_IMPORT_BY_NAME {
@@ -133,4 +144,8 @@ Process Environment Block is an important data structure from an exploiter's per
 [WindbgDownloadLink]: https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/
 [symbol]: https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/symbols-and-symbol-files
 [modules]: {{ site.baseurl }}/assets/images/firstPost/modulesLoaded.JPG "modules loaded"
-[dosHeader]: {{ site.baseurl }}/assets/images/firstPost/DosHeader.JPG "Dos Header"
+[dosHeader]: {{ site.baseurl }}/assets/images/firstPost/dos_header.JPG "Dos Header"
+[peHeader]: {{ site.baseurl }}/assets/images/firstPost/peHeader.JPG "PE Header"
+[importDir]: {{ site.baseurl }}/assets/images/firstPost//import_dir.JPG "Import Directory"
+[oft]: {{ site.baseurl }}/assets/images/firstPost/original_first_thunk.JPG "Original First Thunk"
+[oft_val]: {{ site.baseurl }}/assets/images/firstPost/original_first_thunk_val.JPG 
