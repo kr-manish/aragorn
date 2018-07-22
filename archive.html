@@ -1,10 +1,10 @@
 ---
 layout: default
-title: Archive
+title: Post Archives
 ---
 <article role="article" id="archive">
     <header>
-        <h2>{{page.title}}</h2>
+        <h2 id="top">{{page.title}}</h2>
         <ul class="tag-cloud">
         {% capture site_tags %}{% for tag in site.tags %}{{ tag | first }}{% unless forloop.last %},{% endunless %}{% endfor %}{% endcapture %}
         {% assign sortedTags = site_tags | split:',' | sort %}
@@ -23,7 +23,7 @@ title: Archive
                 {{post.title}}</a>
             </li>
             {% endfor %}
-            <!-- <p class="return"><a href="#top" title="return to top">return to top</a></p> -->
+            <li class="return"><a href="#top" title="return to top">return to top</a></li>
         </ul>
     {% endfor %}
 </article>

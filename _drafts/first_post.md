@@ -9,6 +9,7 @@ You can use any executable to deep dive into OS internals. Here I have used micr
 
 Portable Executable (PE) format is a file format for executables, DLLs and others used in windows operating system. The PE format is a data structure that encapsulates the information necessary for the windows OS loader to manage the wrapped executable code. This includes dynamic library references for linking, API export and import tables etc.  
 Here we are going to understand PE structure, the concepts and various data directories inside it. Let's get started.  
+
 At first, open windbg and set up the symbols to point to Microsoft's Symbols Server. This is done to make our debugging easier. To understand more about symbols, you can read this [microsoft's documentation][symbol]. 
 Now open up the executable (notepad.exe in this case) in windbg. Once opened, it shows all the loaded modules of notepad. We can also get the list of all loaded modules using `lm` command. Take a look at the following output:
 
@@ -69,9 +70,8 @@ Let us now view the address pointed out by OriginalFirstThunk:
 
 ![Original First Thunk][oft]
 
-![Original First Thunk Value][oft_val]
-
 We get a list of RVAs which are also called _IMAGE_THUNK_DATA which in turn points to the structure of type _IMAGE_IMPORT_BY_NAME structure:  
+
 ```cpp
 typedef struct _IMAGE_IMPORT_BY_NAME {
     WORD Hint;
@@ -80,28 +80,37 @@ typedef struct _IMAGE_IMPORT_BY_NAME {
 ```
 Here, Name[1] is the name of the imported function which can have a varibale length. So, this means that _IMAGE_THUNK_DATA and _IMAGE_IMPORT_BY_NAME structures have one to one correspondence.  
 We can view this as:  
-IMAGE -> dc base_addr+image_thunk_data  
+
+![Original First Thunk Value][oft_val]
 
 Now, let us view FirstThunk.  
-IMAGE -> dd base+fisrtthunk  
+
+![First Thunk][firstThunk]
+
 We see that it is already populated with virtual addresses. Let us view them:  
-IMAGE -> ln addr  
-IMAGE -> ln addr  
+
+![First Thunk Data][FTdata]
+
 So, these are virtual address of functions imported by PE.  
 We see this table already populated because our PE is already loaded by OS loader and the Import Address Table is already filled with function pointers.  
 
 Now, let us look at the Name field in _IMAGE_IMPORT_DESCRIPTOR. This field gives us the information about the name of modules loaded.  
-IMAGE -> dc base+name  
 The next module loaded is:  
 
+![name field][nameData]
+
 The end of the _IMAGE_IMPORT_DESCRIPTOR array is denoted by a structure filled with all NULL values as shown below:  
-IMAGE -> dd base+ ^  
+
+![end][EOImport]
+
 Another important point to discuss at this point is how API calls made in a program are replaced by bytecode by a compiler.  
 
 #### Import Address Table
 IAT consists of mappings between the absolute virtual addresses and the function names which are exported from different loaded modules.  
 Let us see how we can grab this list of loaded modules. 
-IMAGE -> dps base+VA Lsize/4  
+
+![Import Address Table][IAT]
+
 here, L is used to denote the size and is divided by 4 to take steps of 4 bytes while displaying the addresses.
 
 The question now is, how did IAT get filled up at run time? We will try to find out this.  
@@ -149,3 +158,8 @@ Process Environment Block is an important data structure from an exploiter's per
 [importDir]: {{ site.baseurl }}/assets/images/firstPost//import_dir.JPG "Import Directory"
 [oft]: {{ site.baseurl }}/assets/images/firstPost/original_first_thunk.JPG "Original First Thunk"
 [oft_val]: {{ site.baseurl }}/assets/images/firstPost/original_first_thunk_val.JPG 
+[firstThunk]: {{ site.baseurl }}/assets/images/firstPost/first_thunk.JPG "First Thunk"
+[FTdata]: {{ site.baseurl }}/assets/images/firstPost/first_thunk_data.JPG
+[nameData]: {{ site.baseurl }}/assets/images/firstPost/name_val.JPG
+[EOImport]: {{ site.baseurl }}/assets/images/firstPost/import_dir_end.JPG
+[IAT]: {{ site.baseurl }}/assets/images/firstPost/IAT.JPG "Import Address Table" 

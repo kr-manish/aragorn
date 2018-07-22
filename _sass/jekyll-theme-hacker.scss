@@ -253,6 +253,11 @@ a.more:after {
   }
   h3 {
     @include relative-font-size(1.2);
+    color: $silver-chalice; 
+  }
+  ul {
+    list-style: none;
+    margin: 0;
   }
 }
 .taglist li {
@@ -282,6 +287,23 @@ a.more:after {
 }
 .tag-cloud a:visited {
   color: $rajah;
+}
+
+.return {
+  display: none;
+}
+
+.h3:target + .taglist .return {
+  display:block;
+}
+
+.return a {
+	@include relative-font-size(1);
+	text-decoration: none;
+	color: white;
+}
+.return a:before {
+	content: '\25b2\00a0';
 }
 
 /* Links
