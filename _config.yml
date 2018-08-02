@@ -15,6 +15,9 @@ facebook_username: manish.kr8393
 baseurl: /aragorn
 theme: jekyll-theme-hacker
 
+#Google-analytics
+google_analytics: UA-122340797-1
+
 #show_downloads: true
 # Build settings
 markdown: kramdown
