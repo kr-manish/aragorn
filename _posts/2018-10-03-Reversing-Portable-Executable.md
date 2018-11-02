@@ -1,13 +1,14 @@
 ---
 layout: post
 title: Reversing Portable Executable 
-tags: [reversing, security, windows internals]
+tags: [PE File, reversing, security, windows internals]
 ---
 The main aim of this blog is to correlate the Operating System Internals and the approach of Reverse Engineering a malware at code level. Here I will be showing what are the basic things that happen when a portable executable is started.  
-You can use any executable to deep dive into OS internals. Here I have used microsoft's notepad.exe and to debug <!--more-->this I have used microsoft's debugger called **windbg**, which can be downloaded from [here][WindbgDownloadLink].
+You can use any executable to deep dive into OS internals.<!--more--> Here I have used microsoft's notepad.exe and to debug this I have used microsoft's debugger called **windbg**, which can be downloaded from [here][WindbgDownloadLink].
 #### Portable Executable
 
-Portable Executable (PE) format is a file format for executables, DLLs and others used in windows operating system. The PE format is a data structure that encapsulates the information necessary for the windows OS loader to manage the wrapped executable code. This includes dynamic library references for linking, API export and import tables etc.  
+Portable Executable (PE) file format is organized as a linear stream of data. It begins with an MS-DOS header, a real-mode program stub and a PE file signature. Immediately after this is a PE file header and optional header. Beyond this, all section headers come followed by section bodies. In the end, few other regions of miscellaneous information, including relocation information, symbol table information etc are present.  
+PE format is a file format for executables, DLLs and others used in windows operating system. The PE format is a data structure that encapsulates the information necessary for the windows OS loader to manage the wrapped executable code. This includes dynamic library references for linking, API export and import tables etc.  
 Here we are going to understand PE structure, the concepts and various data directories inside it. Let's get started.  
 
 At first, open windbg and set up the symbols to point to Microsoft's Symbols Server. This is done to make our debugging easier. To understand more about symbols, you can read this [microsoft's documentation][symbol]. 
@@ -19,19 +20,22 @@ Once opened, it shows all the loaded modules of notepad. We can also get the lis
 
 ![loaded modules][modules]
 
-We can see all the DLLs loaded with a range of addresses. This shows that each module occupies a specific range of address. For instance, notepad.exe  uses some windows API functions exported by kernel32.dll, hence it is loaded along with notepad and the address range where it is loaded is 77de0000 77eb4000. From this we get the base address of kernel32.dll which is 77de0000. These base addresses of modules are very important as we will get to know that usually the value at hand is an RVA (Relative Value Address). This RVA has to be added in base address to get the original address.  
-Every PE begins with a DOS header having structure of type **_IMAGE_DOS_HEADER**. This occupies the first 64 bytes of the PE file. We can view this in windbg using image base address of PE image, 01000000:  
+We can see all the DLLs loaded with a range of addresses. This shows that each module occupies a specific range of address. For instance, notepad.exe  uses some windows API functions exported by kernel32.dll, hence it is loaded along with notepad and the address range where it is loaded is 77de0000 77eb4000. From this we get the base address of kernel32.dll which is 77de0000. These base addresses of modules are very important as we will get to know that usually the value at hand is an RVA (Relative Value Address). This RVA has to be added in base address to get the original address. 
+ 
+**DOS Header**: Every PE begins with a DOS header having structure of type **_IMAGE_DOS_HEADER**. This occupies the first 64 bytes of the PE file. We can view this in windbg using image base address of PE image, 01000000:  
 **``` dt _IMAGE_DOS_HEADER <base address of PE> ```** 
 
 ![Dos Header][dosHeader]
 
-This gives us two important information:
-   * e_magic - This has the __MZ__ signature hex value 0x5a4d. Every portable executable will begin with this sequence.
-   * e_lfanew - Offset of PE file header. This value is in decimal and hence must be converted into hexadecimal before locating PE file header.
+This gives us two important informations:
+   * e_magic - This has the __MZ__ signature hex value 0x5a4d. Every portable executable will begin with this sequence. This field is used to identify an MS-DOS compatible file type.
+   * e_lfanew - This is a 4-byte offset to the PE file header. This value is in decimal and hence must be converted into hexadecimal before locating PE file header.
 
 In this case, e_lfanew value is 224 which in hexadecimal is E0. Therefore, file header is present at an offset of E0 from the base address of the PE.
 
-#### Data Directories
+**Real-Mode Stub Program**: This is an actual program run by MS-DOS when the executable is loaded. For a MS-DOS executable, the application begins executing from here. For newer windows operating systems, a stub program is placed here that runs instead of actual application. This program just prints a line of text, such as "This program cannot be run in DOS mode".  
+
+##### PE File Header  
 The PE file header structure is defined as:
 ```cpp
 typedef struct _IMAGE_FILE_HEADER {
@@ -45,14 +49,64 @@ typedef struct _IMAGE_FILE_HEADER {
 } IMAGE_FILE_HEADER, *PIMAGE_FILE_HEADER;
 ```
 The information in the PE file header is basically high-level information that is used by the system or applications to determine how to treat the file. The first field is used to indicate what type of machine the executable was built for. Likewise other entries have their own significance.  
-The next few bytes (0xEO bytes) in the executable file make up the PE optional header. Though its name is "optional header," rest assured that this is not an optional entry in PE executable files. The optional header contains most of the meaningful information about the executable image, such as initial stack size, program entry point location, preferred base address, operating system version, section alignment information, and so forth. 
 
-Now let us see the PE header of our executable. The syntax to see **PE Header** is:  
+Now let us see the PE header of our executable. The syntax to see PE Header is:  
+**dt _IMAGE_FILE_HEADER <image_base_address + e_lfnew>**  
+
+![PE Header][peHeader2]
+
+Another way to get the PE header of executable is:   
 __`!dh <image base address> <option>`__.   
+Here option can be:  
+-f Displays file headers.  
+-s Displays section headers.  
+-a Displays all header information.  
 
-![PE Header][peHeader]
+![PE Header][peHeader]  
 
-This gives many information including data directory arrays which is highlighted in the above diagram. The data directory indicates where to find other important components of executable information in the file. It's an array of structures of **IMAGE_DATA_DIRECTORY** and here two fields are shown for each:  
+##### PE Optional Header
+ The next few bytes (0xEO bytes) in the executable file make up the PE optional header. Though its name is "optional header," rest assured that this is not an optional entry in PE executable files. The optional header contains most of the meaningful information about the executable image, such as initial stack size, program entry point location, preferred base address, operating system version, section alignment information, and so forth. The above image shows the optional header entries as well.  
+The IMAGE_OPTIONAL_HEADER structure represents the optional header as follows:
+
+```cpp
+typedef struct _IMAGE_OPTIONAL_HEADER {
+  WORD                 Magic;
+  BYTE                 MajorLinkerVersion;
+  BYTE                 MinorLinkerVersion;
+  DWORD                SizeOfCode;
+  DWORD                SizeOfInitializedData;
+  DWORD                SizeOfUninitializedData;
+  DWORD                AddressOfEntryPoint;
+  DWORD                BaseOfCode;
+  DWORD                BaseOfData;
+  DWORD                ImageBase;
+  DWORD                SectionAlignment;
+  DWORD                FileAlignment;
+  WORD                 MajorOperatingSystemVersion;
+  WORD                 MinorOperatingSystemVersion;
+  WORD                 MajorImageVersion;
+  WORD                 MinorImageVersion;
+  WORD                 MajorSubsystemVersion;
+  WORD                 MinorSubsystemVersion;
+  DWORD                Win32VersionValue;
+  DWORD                SizeOfImage;
+  DWORD                SizeOfHeaders;
+  DWORD                CheckSum;
+  WORD                 Subsystem;
+  WORD                 DllCharacteristics;
+  DWORD                SizeOfStackReserve;
+  DWORD                SizeOfStackCommit;
+  DWORD                SizeOfHeapReserve;
+  DWORD                SizeOfHeapCommit;
+  DWORD                LoaderFlags;
+  DWORD                NumberOfRvaAndSizes;
+  IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
+} IMAGE_OPTIONAL_HEADER32, *PIMAGE_OPTIONAL_HEADER32;
+```
+ 
+#### Data Directories
+
+The PE optional header gives many information including data directory arrays which is highlighted in the above diagram. The data directory indicates where to find other important components of executable information in the file. It's an array of structures of **IMAGE_DATA_DIRECTORY** and here two fields are shown for each:  
 Virtual Address and size.
 
 ##### Import Directory
@@ -182,6 +236,7 @@ other useful links:
 [modules]: {{ site.baseurl }}/assets/images/firstPost/modulesLoaded.JPG "modules loaded"
 [dosHeader]: {{ site.baseurl }}/assets/images/firstPost/dos_header.JPG "Dos Header"
 [peHeader]: {{ site.baseurl }}/assets/images/firstPost/peHeader.JPG "PE Header"
+[peHeader2]: {{ site.baseurl }}/assets/images/firstPost/peHeader2.JPG "PE Header"
 [importDir]: {{ site.baseurl }}/assets/images/firstPost//import_dir.JPG "Import Directory"
 [oft]: {{ site.baseurl }}/assets/images/firstPost/original_first_thunk.JPG "Original First Thunk"
 [oft_val]: {{ site.baseurl }}/assets/images/firstPost/original_first_thunk_val.JPG 
