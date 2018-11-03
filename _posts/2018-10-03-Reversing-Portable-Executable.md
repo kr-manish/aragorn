@@ -35,7 +35,7 @@ In this case, e_lfanew value is 224 which in hexadecimal is E0. Therefore, file 
 
 **Real-Mode Stub Program**: This is an actual program run by MS-DOS when the executable is loaded. For a MS-DOS executable, the application begins executing from here. For newer windows operating systems, a stub program is placed here that runs instead of actual application. This program just prints a line of text, such as "This program cannot be run in DOS mode".  
 
-##### PE File Header  
+###### PE File Header  
 The PE file header structure is defined as:
 ```cpp
 typedef struct _IMAGE_FILE_HEADER {
@@ -66,7 +66,7 @@ Here option can be:
 
 ![PE Header][peHeader]  
 
-##### PE Optional Header
+###### PE Optional Header
  The next few bytes (0xEO bytes) in the executable file make up the PE optional header. Though its name is "optional header," rest assured that this is not an optional entry in PE executable files. The optional header contains most of the meaningful information about the executable image, such as initial stack size, program entry point location, preferred base address, operating system version, section alignment information, and so forth. The above image shows the optional header entries as well.  
 The IMAGE_OPTIONAL_HEADER structure represents the optional header as follows:
 
@@ -111,7 +111,7 @@ Few important entries in this structure are:
 **DllCharacteristics**: Different characteristics that the linked libraries have. The value we have for notepad is 0x8140, which is the sum of 3 values, 0x8000(terminal server aware), 0x100 (NX compatible) and 0x40 (dynamic base, ASLR enabled). see [DLL characteristics] for more info.  
 **Subsystem**: The subsystem that is required to run this image.
  
-#### Data Directories
+##### Data Directories
 
 The PE optional header gives many information including data directory arrays which is highlighted in the above diagram. The data directory indicates where to find other important components of executable information in the file. It's an array of structures of **IMAGE_DATA_DIRECTORY** and here two fields are shown for each: Relative Virtual Address and size. This is an 8-byte field that has the structure:  
 ```cpp
@@ -123,7 +123,7 @@ typedef struct _IMAGE_DATA_DIRECTORY {
 
 Here we are not going to see all the sections that can be present in an image, but only the important ones for now.  
 
-##### Import Directory
+###### Import Directory
 The import section (usually .idata) contains information about all the functions imported by the executable from DLLs. This information is stored in several data structures. The most important of these are the Import Directory and the Import Address Table. The Windows loader is responsible for loading all of the DLLs that the application uses and mapping them into the process address space.  
 Import table contains an array of data structure of type *_IMAGE_IMPORT_DESCRIPTOR*. This structure has following form: 
 ```cpp
@@ -197,7 +197,7 @@ The end of the _IMAGE_IMPORT_DESCRIPTOR array is denoted by a structure filled w
 
 ![end][EOImport]
 
-##### Import Address Table (IAT)
+###### Import Address Table (IAT)
 IAT consists of mappings between the absolute virtual addresses and the function names which are exported from different loaded modules.  
 Let us see how we can grab this list of loaded modules. 
 
@@ -206,7 +206,7 @@ Let us see how we can grab this list of loaded modules.
 here, L is used to denote the size and is divided by 4 to take steps of 4 bytes while displaying the addresses.
 
 The question now is, how did IAT get filled up at run time? We will try to find out this.  
-##### Export Directory
+###### Export Directory
 This section is particularly relevant to DLLs. Each loaded module will have it's own Export Directory. It is a structure called, IMAGE_EXPORT_DIRECTORY, having the following form:
 ```cpp
 Private type IMAGE_EXPORT_DIRECTORY {
@@ -236,14 +236,49 @@ So the flow is something like this: The function name is fetched using the Expor
 
 This should now make it clear how the OS loader gets to know the addresses of functions which are imported by the main module.  
 
+###### Section Table (Section Headers)  
+
+Each row in a section table is a section header. This table is just after the optional header finishes. There is no direct pointer to this table in the file header, therefore this positioning, just after the optional header, is required. The number of entries in a section table is determined by the _NumberOfSections_ field in the file header, which is 4 in our case. Each section header is of 40 bytes (0x28) and has the following format:  
+```cpp
+typedef struct _IMAGE_SECTION_HEADER {
+  BYTE  Name[IMAGE_SIZEOF_SHORT_NAME];
+  union {
+    DWORD PhysicalAddress;
+    DWORD VirtualSize;
+  } Misc;
+  DWORD VirtualAddress;
+  DWORD SizeOfRawData;
+  DWORD PointerToRawData;
+  DWORD PointerToRelocations;
+  DWORD PointerToLinenumbers;
+  WORD  NumberOfRelocations;
+  WORD  NumberOfLinenumbers;
+  DWORD Characteristics;
+} IMAGE_SECTION_HEADER, *PIMAGE_SECTION_HEADER;
+```  
+To determine the position of this section table, we have to add base address, offset of file header, size of file header and size of optional header. The base address of notepad is 0x01000000, 0xe4 (file header), 0x14 (file header size) and 0xe0 (optional header size). Then we can fire up the command _`dc <sum of these RVAs>`_ to get the section table as follows:  
+
+![section table][secTable]
+
+As you can see, we indeed have 4 sections namely .text, .data, .rsrc and .reloc. To get the different values, as per the structure, of first section we can run the command _`dt _IMAGE_SECTION_HEADER <section table address>`_. To get the other sections, we can just keep adding the size of each section header, i.e., 0x28, as below.
+
+![section headers][secHeader]  
+
+One important field that section header has, is the _Characteristics_ flag. This describes what all are the features of that section. For example, let us take .text sectoins characteristics value, which is 0x60000020. This value is actually a sum of 0x40000000(IMAGE_SCN_MEM_READ) + 0x20000000(IMAGE_SCN_MEM_EXECUTE) + 0x20(IMAGE_SCN_CNT_CODE). Which in short means that this section contains executable code which can be executed and memory read can happen on this region.  
+While on the other hand, if we check .data section's characteristics (0xc0000040), one can deduce that this section contains initialized data (0x40), can be read(0x40000000) or written to(0x80000000). This means that this section is only for storing/manipulating data. But no execution will happen in this section. This means that .data section is NX(No eXecutable) protected. see [section flags] for more info.
+
+That's all for this blog!
+
 #### References
 Here are some links to understand more about PE file format:
   * [Portable Executable File Format](https://msdn.microsoft.com/en-IN/library/ms809762.aspx)  
   * [Import Table](http://www.programminghorizon.com/win32assembly/pe-tut6.html)
   * [deptofdefence](https://github.com/deptofdefense/SalSA/wiki/PE-File-Format)
+  * [PE 101](https://visual.ly/community/infographic/computers/portable-executable-101)  
 
-other useful links:
-  * [Windbg commands](http://windbg.info/doc/1-common-cmds.html)
+useful links for winDbg:
+  * [1](http://windbg.info/doc/1-common-cmds.html)
+  * [2](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/commands)
 
 [WindbgDownloadLink]: https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/
 [symbol]: https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/symbols-and-symbol-files
@@ -261,3 +296,6 @@ other useful links:
 [IAT]: {{ site.baseurl }}/assets/images/firstPost/IAT.JPG "Import Address Table" 
 [machine types]: https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#machine-types
 [DLL characteristics]: https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#dll-characteristics
+[secTable]: {{ site.baseurl }}/assets/images/firstPost/secTable.JPG "Section Table"
+[secHeader]:{{ site.baseurl }}/assets/images/firstPost/secHeader.JPG "Section Header"
+[section flags]: https://docs.microsoft.com/en-us/windows/desktop/api/winnt/ns-winnt-_image_section_header#members
