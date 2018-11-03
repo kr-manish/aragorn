@@ -55,6 +55,8 @@ Now let us see the PE header of our executable. The syntax to see PE Header is:
 
 ![PE Header][peHeader2]
 
+Here *machine* field has value 0x14c, which shows that the type of target machine is intel 386 or later processors. see [machine types]. We can also see that the number of sections is 4. This indicats the size of section table is 4, which immediately follows the headers.  
+
 Another way to get the PE header of executable is:   
 __`!dh <image base address> <option>`__.   
 Here option can be:  
@@ -103,11 +105,23 @@ typedef struct _IMAGE_OPTIONAL_HEADER {
   IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES];
 } IMAGE_OPTIONAL_HEADER32, *PIMAGE_OPTIONAL_HEADER32;
 ```
+
+Few important entries in this structure are:  
+**AddressOfEntryPoint**: This is the address of entry point relative to the image base when the image is loaded into memory. For program images, this is the starting address. For device drivers, this is the address of initialization function.  
+**DllCharacteristics**: Different characteristics that the linked libraries have. The value we have for notepad is 0x8140, which is the sum of 3 values, 0x8000(terminal server aware), 0x100 (NX compatible) and 0x40 (dynamic base, ASLR enabled). see [DLL characteristics] for more info.  
+**Subsystem**: The subsystem that is required to run this image.
  
 #### Data Directories
 
-The PE optional header gives many information including data directory arrays which is highlighted in the above diagram. The data directory indicates where to find other important components of executable information in the file. It's an array of structures of **IMAGE_DATA_DIRECTORY** and here two fields are shown for each:  
-Virtual Address and size.
+The PE optional header gives many information including data directory arrays which is highlighted in the above diagram. The data directory indicates where to find other important components of executable information in the file. It's an array of structures of **IMAGE_DATA_DIRECTORY** and here two fields are shown for each: Relative Virtual Address and size. This is an 8-byte field that has the structure:  
+```cpp
+typedef struct _IMAGE_DATA_DIRECTORY {
+    DWORD   VirtualAddress;
+    DWORD   Size;
+} IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
+```
+
+Here we are not going to see all the sections that can be present in an image, but only the important ones for now.  
 
 ##### Import Directory
 The import section (usually .idata) contains information about all the functions imported by the executable from DLLs. This information is stored in several data structures. The most important of these are the Import Directory and the Import Address Table. The Windows loader is responsible for loading all of the DLLs that the application uses and mapping them into the process address space.  
@@ -245,3 +259,5 @@ other useful links:
 [nameData]: {{ site.baseurl }}/assets/images/firstPost/name_val.JPG
 [EOImport]: {{ site.baseurl }}/assets/images/firstPost/import_dir_end.JPG
 [IAT]: {{ site.baseurl }}/assets/images/firstPost/IAT.JPG "Import Address Table" 
+[machine types]: https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#machine-types
+[DLL characteristics]: https://docs.microsoft.com/en-us/windows/desktop/debug/pe-format#dll-characteristics
