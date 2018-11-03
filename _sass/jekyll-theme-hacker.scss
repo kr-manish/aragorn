@@ -200,8 +200,7 @@ li {
     margin: 0 0 5px 0;
   }
   h6 {
-    @include relative-font-size(1);
-    color: #999;
+    @include relative-font-size(1.15);
     margin: 0 0 5px 0;
   }
   a {
