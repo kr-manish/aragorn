@@ -1,0 +1,19 @@
+---
+layout: about
+title: About 
+---
+<section class="about">
+    <div class="bg_img"></div>
+    <a href="{{ site.baseurl }}/" class="back_button"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> Back </a>
+    <div class="about_box">
+        <div class="author">
+            <div class="author_img">
+                <img src="{{site.baseurl}}/assets/images/manish.JPG" alt="Author image">
+            </div>
+        <div class="author_info">
+            <h2 class="author_title">{% if site.author %}{{site.author}}{% else %}Manish{%endif%}</h2>
+            <p class="author_subtitle"> I am a cyber security enthusiast living in bangalore, India. Very much interested in reverse engineering malwares. I am a Certified Ethical Hacker (v9).</p>
+            <p class="author_subtitle"> Passionate about travelling, photography and sketching. You can follow me <a href="{{site.baseurl}}/contacts.html">here</p>
+        </div>
+    </div>
+</section>

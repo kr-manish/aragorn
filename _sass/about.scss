@@ -1,0 +1,99 @@
+@import "default_values";
+@import "rouge-base16-dark";
+
+.about .bg_img {
+    background-image: url("../images/himalaya.jpg");
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    filter: blur(3px);    
+    -webkit-filter: blur(3px);
+}
+
+.about .back_button {
+    position: absolute;
+    top: 10px;
+    color: #e1ed00; 
+    left: 10px;
+    text-align: left;
+    i {
+        color: yellow;
+    }
+}
+.about {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 700px;
+    //background-image: url("../images/himalaya.jpg");
+    //background-size: cover;
+    //background-position: 50% 50%;
+    //background-repeat: no-repeat;
+}
+
+.about_box {
+    position: absolute;
+    -webkit-border-radius: 0.5rem;
+            border-radius: 0.5rem;
+    width: 600px;
+    max-width: 90%;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    overflow: auto;
+}
+
+.author {
+    padding: 2rem 0;
+    margin-bottom: 1.5rem;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0, 0.4);
+    border: 3px solid #f1f1f1;
+}
+
+.about .author {
+    -webkit-border-radius: 0.5rem;
+            border-radius: 0.5rem;
+    margin-bottom: 1rem; 
+}
+
+.author .author_info {
+    padding-left: 8rem;
+    .author_title {
+        margin-top: 0;
+        color: white;
+    }
+    .author_subtitle {
+        padding: 5px;
+        a {color: yellow;}
+    }
+}
+
+.author .author_img {
+    float: left;
+    display: inline-block;
+    -webkit-border-radius: 50%;
+            border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    margin-right: 2rem;
+    img {
+        width: 100%;
+    }
+}
+
+.about .author .author_info {
+    padding: 0;
+    text-align: center;
+}
+
+.about .author .author_img {
+    float: none;
+    display: block;
+    margin: 0 auto 1.75rem;
+}
