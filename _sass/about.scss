@@ -68,7 +68,7 @@
         color: white;
     }
     .author_subtitle {
-        padding: 5px;
+        padding: 0 5px;
         a {color: yellow;}
     }
 }
@@ -78,8 +78,8 @@
     display: inline-block;
     -webkit-border-radius: 50%;
             border-radius: 50%;
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
     overflow: hidden;
     margin-right: 2rem;
     img {
