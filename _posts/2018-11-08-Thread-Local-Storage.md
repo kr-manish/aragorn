@@ -3,7 +3,7 @@ layout: post
 title: Thread Local Storage
 tags: [PE File, reversing, security, windows internals, TLS]
 ---
-In the [previous]({{ page.previous.url }}) blog, we got to know that every PE file has an address of entry point from where program starts executing. But, is it really true! In this blog, we are going to learn how we can run code even before entry point using a capability typically known as Thread Local Storage (TLS) and what it can be used for.<!--more-->
+In the [previous]({{ site.baseurl }}/{{ page.previous.url }}) blog, we got to know that every PE file has an address of entry point from where program starts executing. But, is it really true! In this blog, we are going to learn how we can run code even before entry point using a capability typically known as Thread Local Storage (TLS) and what it can be used for.<!--more-->
 
 #### What is TLS?  
 
@@ -69,7 +69,7 @@ typedef struct _IMAGE_TLS_DIRECTORY {
 } IMAGE_TLS_DIRECTORY, *PIMAGE_TLS_DIRECTORY;
 ```
 
-Lets check these fields for this sample. Execute the command "__dt IMAGE_TLS_DIRECTORY <base image + TLS directory address>__.  
+Lets check these fields for this sample. Execute the command "__dt IMAGE_TLS_DIRECTORY <base image + TLS directory address>__".  
 
 ![TLS structure][tlsStruct]
 
