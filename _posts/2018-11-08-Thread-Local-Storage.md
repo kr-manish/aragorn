@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Thread Local Storage
-tags: [PE File, reversing, security, windows internals]
+tags: [PE File, reversing, security, windows internals, TLS]
 ---
 In the [previous]({{ page.previous.url }}) blog, we got to know that every PE file has an address of entry point from where program starts executing. But, is it really true! In this blog, we are going to learn how we can run code even before entry point using a capability typically known as Thread Local Storage (TLS) and what it can be used for.<!--more-->
 
