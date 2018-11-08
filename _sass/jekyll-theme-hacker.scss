@@ -83,7 +83,7 @@ body {
   }
   &:hover {
     text-decoration: underline;
-  }
+   }
 }
 
 .site-nav {
@@ -205,8 +205,11 @@ li {
     margin: 0 0 5px 0;
   }
   a {
-    text-decoration: underline;
+    //text-decoration: underline;
     color: $gulf-stream;
+    &:hover {
+        text-decoration: underline;
+    }
   }
 }
 
@@ -397,12 +400,50 @@ aside li {
   h2 { text-align: left; }
 }
 
+// Contact me
 .follow {
   list-style-type: none;
 }
 
-li.github {
-    background: url(../images/github.svg) no-repeat left top;
+.fa {
+    font-size:30px;
+    padding: 10px;
+    width: 30px;
+    text-align: center;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+.fa-facebook {
+    background: #3b5998;
+    color:white;
+}
+
+.fa-github {
+    background: #101010;
+    color:white;
+}
+
+.fa-linkedin {
+    background: #007bb5;
+    color:white;
+}
+
+.fa-instagram {
+    background: #125688;
+    color:white;
+}
+
+.fa-twitter {
+    background: #55acee;
+    color:white;
+}
+/*li.github {
+    //background: url(../images/github.svg) no-repeat left top;
     height: 32px;
     padding-left: 44px;
     padding-top: 8px;
@@ -426,7 +467,7 @@ li.twitter {
 	background: url(../images/twitter.svg) no-repeat left top;
     height: 32px;
     padding: 8px 0 0 44px;
-}
+}*/
 
 /* --------------------------------------------------
    Smaller screen styles
