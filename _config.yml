@@ -1,7 +1,8 @@
 # Site settings
 title: AragornSec
 author: Manish Kumar
-description: "Travel and Secure the world!"
+tagline: "Travel and Secure the world!"
+description: "Blog to share my learnings on malware reversing/analysis and cybersecurity"
 show_excerpts: true
 excerpt_separator: <!--more-->
 

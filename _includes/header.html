@@ -21,7 +21,7 @@
     </div>
     <div class="container">
         <a class="site-title" rel="author" href="{{ "/" | relative_url }}">{{ site.title | escape }}</a>
-        <h2>{{ site.description | default: site.github.project_tagline }}</h2>
+        <h2>{{ site.tagline | default: site.github.project_tagline }}</h2>
 
         <!-- <a href="{{ site.github.repository_url }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a> -->
     </div>
