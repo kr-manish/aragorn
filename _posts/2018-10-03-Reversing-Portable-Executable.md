@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Reversing Portable Executable 
+description: Blog to understand PE file format and reversing it using microsoft's windbg debugger
 tags: [PE File, reversing, security, windows internals]
 ---
 The main aim of this blog is to correlate the Operating System Internals and the approach of Reverse Engineering a malware at code level. Here I will be showing what are the basic things that happen when a portable executable is started.  

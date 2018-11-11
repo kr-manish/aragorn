@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Thread Local Storage
+description: Blog to understand a feature known as Thread Local Storage and how it can be used for anti-debugging purposes
 tags: [PE File, reversing, security, windows internals, TLS]
 ---
 In the [previous]({{ site.baseurl }}{{ page.previous.url }}) blog, we got to know that every PE file has an address of entry point from where program starts executing. But, is it really true! In this blog, we are going to learn how we can run code even before entry point using a capability typically known as Thread Local Storage (TLS) and what it can be used for.<!--more-->
@@ -9,7 +10,7 @@ In the [previous]({{ site.baseurl }}{{ page.previous.url }}) blog, we got to kno
 
 Every thread of a process shares its virtual address space. The local variable of a function is unique to each thread. But what about global and static variables. They are shared by all the threads in a process. So, it can happen that in a multithreaded program, these global variables are being accessed and changed by one thread. Which can cause problems for other threads. To avoid this race condition, practically all the multithreaded OSes provide a mechanism to efficiently store state on a per thread basis. With TLS, we can provide unique data for each thread that they only can access. To understand more about TLS and understand how it is implemented, you can refer to the links provided in the references.  
 
-Now, we are going to analyze a sample which has a thread local storage implemented in it. It's not doing anything malicious here rather just two message boxes pops up, one from TLS callback function and other from main function. The sample I have used can be downloaded from [here][sample], (password is: clean). The source code is present on [github][code]. So, let's get started with our analysis.  
+Now, we are going to analyze a sample which has a thread local storage implemented in it. It's not doing anything malicious here rather just two message boxes pops up, one from TLS callback function and other from main function. The sample I have used can be downloaded from [here][sample], (password is: clean). The source code is can be viewed [this][code]. So, let's get started with our analysis.  
 
 ##### Analyzing the binary  
 
