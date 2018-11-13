@@ -420,6 +420,10 @@ aside li {
 // Contact me
 .follow {
   list-style-type: none;
+  li {
+    display: inline;
+    margin-right: 20px;
+  }
 }
 
 .fa {
@@ -427,7 +431,7 @@ aside li {
     padding: 10px;
     width: 30px;
     text-align: center;
-    margin-right: 10px;
+    margin-right: 5px;
     border-radius: 50%;
 }
 
