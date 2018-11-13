@@ -144,6 +144,23 @@ body {
   }
 }
 
+.pageNavigation {
+    @include relative-font-size(0.8);
+    margin-bottom: $spacing-unit;
+    width: auto;
+    overflow: hidden;
+    display: inline;
+}
+
+.pageNavigation a {
+    float: left;
+    margin: 2em 0;
+}
+
+.pageNavigation .previous{
+    float: right;
+}
+
 section {
   display: block;
   margin: 0 0 20px 0;

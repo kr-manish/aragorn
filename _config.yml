@@ -30,3 +30,7 @@ permalink: /blog/:title
 
 plugins:
     - jekyll-seo-tag
+
+#comments
+disqus:
+    shortname: aragornsec
