@@ -2,7 +2,7 @@
 layout: post
 title: FLARE On Challenge 2018 
 description: Write ups for fifth Flare-On edition
-tags: [CTF, reversing]
+tags: [CTF, reversing, flareOn]
 ---
 
 Flare-On is a CTF challenge organized by Flare team of FireEye labs. There are a total of 12 challenges totally based on reverse engineering. Without further ado, lets get started on the write ups of challenges which I was able to solve.<!--more-->
@@ -68,6 +68,53 @@ Once you get the three values, open the game and reveal the specific squares and
 
 Flag is: Ch3aters_Alw4ys_W1n@flare-on.com  
 
+#### 3. FLEGGO  
+
+Third problem was not "an" exe file, but 48 exe files! Double clicking any of them opens up the console which asks for some password. If we provide wrong password, it prints this  
+
+![password][password]
+
+Loading the sample in CFF Explorer, shows that the sample has something in the resource section which is named as "BRICK" as shown.  
+
+![resource][resource]
+
+Lets open the sample in IDA. In the main function, we can see that there is a call instruction at address 0x401320 (may be different for you), which IDA has commented as "Loading BRICK Resource". This means that that function is used to load the resource section of the sample.  
+
+![Loadresource][LoadResource]
+
+If you check that function, you will see APIs which are specific to resources like FindResourceW, LoadResource, SizeofResource etc. The data of resource section is being copied to the address 0x404380, which IDA has given a name "ResDestination".
+
+After loading the resource, it asks for a password and then at 0x401367, it calls the compare function. The output of this function is then compared to 0. If the output is 0, then that message 'Go step on a brick' is displayed which we saw earlier. This shows that the input is incorrect.  
+
+Inside the comparison function, we see that the input is first compared with a text "IronManSucks". If we give password as this text, we get  
+
+![ironmansucks][ironmansucks]
+
+Still no flag!
+
+If the input doesn't match with that text, it goes to another set of instructions as shown:
+
+![compare][compare]
+
+This is basically a comparison of input provided by the user with the initial bits of the resource section (see ResDestination that we encounterd earlier). So, this shows that the input/password that we have to provide has to be equal to the initial characters of the resource section.   
+From the image of CFF Explorer showing resource section above, the value that password should be equal to is "ZImIT7DyCMOeF6" (for the sample I ran). After providing this password, a png file gets created whose name is printed in the console along with a character ("w" in my case).
+
+![fleggoSuccess][fleggoSuccess]
+
+Now, to get all the images and the associated characters, we have to check resource section of all the 48 files and provide that as the password. You can automate this whole process or you can do manually! After doing all that, we get a list of pairs like this:  
+
+![pair][pair]
+
+which doesn't make any sense right now but looks like flag which is jumbled up. Now, open any image and you will see that there is a number present in all the images ("7" for this case).
+
+![rescImage][rescImage]
+
+So, now we have the characters associated with an image and the corresponding place of that character. For example, "w" is the 7th character in the flag. Likewise map all the characters and we will get the flag!!  
+
+Flag is: mor3_awes0m3_th4n_an_awes0me_p0ssum@flare-on.com
+
+
+
 __Note__: more to come....
 
 [validation]: {{ site.baseurl }}/assets/images/flare/validation.PNG
@@ -83,3 +130,11 @@ __Note__: more to come....
 [fail]: {{ site.baseurl }}/assets/images/flare/fail.PNG
 [success2]: {{ site.baseurl }}/assets/images/flare/success2.PNG
 [game]: {{ site.baseurl }}/assets/images/flare/game.PNG
+[password]: {{ site.baseurl }}/assets/images/flare/password.PNG
+[resource]: {{ site.baseurl }}/assets/images/flare/resc.PNG
+[LoadResource]: {{ site.baseurl }}/assets/images/flare/LoadResc.PNG
+[ironmansucks]: {{ site.baseurl }}/assets/images/flare/ironmansucks.PNG
+[compare]: {{ site.baseurl }}/assets/images/flare/compare.PNG
+[rescImage]: {{ site.baseurl }}/assets/images/flare/rescImage.PNG
+[fleggoSuccess]: {{ site.baseurl }}/assets/images/flare/fleggoSuccess.PNG
+[pair]: {{ site.baseurl }}/assets/images/flare/resc_jumb.PNG
