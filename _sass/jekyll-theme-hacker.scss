@@ -107,7 +107,7 @@ body {
   margin-left: 0;
   list-style: none;
   > li {
-    margin-bottom: 2px;
+    margin-bottom: 4px;
   }
 }
 
@@ -167,7 +167,7 @@ section {
 }
 
 li {
-  line-height: 1;
+  line-height: 1.2;
   margin-bottom: 10px;
 }
 
@@ -213,7 +213,6 @@ li {
        margin-bottom: 0;
   }
   h5 {
-    text-transform: uppercase;
     @include relative-font-size(1.25);
     margin: 0 0 5px 0;
   }
@@ -510,7 +509,7 @@ nav ul {
 }
 nav li {
 	background: #42659A;
-    width: 30%;
+        width: 30%;
 	margin-bottom: .2em;
 }
 nav li:hover {
