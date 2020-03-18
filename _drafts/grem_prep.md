@@ -56,7 +56,7 @@ GREM certification exam has open book format. That said, I never relied on books
 
 The notes that I created looks something like this:
 
-![my notes][notes]
+![my notes]({{ site.baseurl }}/assets/images/GREM/Malware Analysis.png)i{:class="img-responsive"}
 
 ##### Practice tests
 In my opinion, the practice tests are very essential for these exams. They can give some idea about how much prepared you are and what areas to focus more. Also, they can give you look and feel of the actual test. I don't know whether they are easier or harder than the originl exam but the format is exactly the same. So, it can prepare you for the original exam if given with seriousness.
@@ -69,4 +69,3 @@ Some usefule links
   * [Grey Box Testing](https://medium.com/@eaugusto/grey-box-testing-how-i-passed-the-giac-grem-exam-without-taking-the-course-fda132d177c3)
   * [Black Hat Presentation](https://www.blackhat.com/presentations/bh-dc-07/Kendall_McMillan/Presentation/bh-dc-07-Kendall_McMillan.pdf)
 
-[notes]: {{ site.baseurl }}/assets/images/GREM/Malware Analysis.png
